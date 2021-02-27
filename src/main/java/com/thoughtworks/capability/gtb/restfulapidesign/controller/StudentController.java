@@ -1,7 +1,7 @@
 package com.thoughtworks.capability.gtb.restfulapidesign.controller;
 
 
-import com.thoughtworks.capability.gtb.restfulapidesign.entity.Student;
+import com.thoughtworks.capability.gtb.restfulapidesign.vo.Student;
 import com.thoughtworks.capability.gtb.restfulapidesign.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +52,7 @@ public class StudentController {
     @RequestMapping(path = "/{id}", method = {RequestMethod.PATCH, RequestMethod.PUT})
     @ResponseStatus(HttpStatus.CREATED)
     public Student updateStudent(@PathVariable long id, @RequestBody Student student) {
+        log.info("update student by id: {}", id);
         return studentService.updateStudent(id, student);
     }
 

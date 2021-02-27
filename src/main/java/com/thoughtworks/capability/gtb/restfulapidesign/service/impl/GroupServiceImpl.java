@@ -1,14 +1,18 @@
 package com.thoughtworks.capability.gtb.restfulapidesign.service.impl;
 
-import com.thoughtworks.capability.gtb.restfulapidesign.entity.Group;
-import com.thoughtworks.capability.gtb.restfulapidesign.entity.Student;
+import com.thoughtworks.capability.gtb.restfulapidesign.utils.Utils;
+import com.thoughtworks.capability.gtb.restfulapidesign.vo.Group;
+import com.thoughtworks.capability.gtb.restfulapidesign.vo.Student;
 import com.thoughtworks.capability.gtb.restfulapidesign.service.GroupService;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -50,11 +54,15 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> getGroups() {
+        if (Objects.isNull(groups) || groups.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "there is no group");
+        }
         return groups;
     }
 
     @Override
     public Group updateGroup(int groupId, Group group) {
-        return getGroup(groupId).updateByGroup(group);
+        Utils.copyPropertiesIgnoreNull(group, getGroup(groupId));
+        return getGroup(groupId);
     }
 }

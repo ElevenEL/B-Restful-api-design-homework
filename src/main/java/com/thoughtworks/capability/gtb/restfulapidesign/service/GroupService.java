@@ -1,7 +1,7 @@
 package com.thoughtworks.capability.gtb.restfulapidesign.service;
 
-import com.thoughtworks.capability.gtb.restfulapidesign.entity.Group;
-import com.thoughtworks.capability.gtb.restfulapidesign.entity.Student;
+import com.thoughtworks.capability.gtb.restfulapidesign.vo.Group;
+import com.thoughtworks.capability.gtb.restfulapidesign.vo.Student;
 
 import java.util.List;
 

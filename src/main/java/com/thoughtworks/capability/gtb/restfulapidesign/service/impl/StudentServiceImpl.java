@@ -1,6 +1,7 @@
 package com.thoughtworks.capability.gtb.restfulapidesign.service.impl;
 
-import com.thoughtworks.capability.gtb.restfulapidesign.entity.Student;
+import com.thoughtworks.capability.gtb.restfulapidesign.utils.Utils;
+import com.thoughtworks.capability.gtb.restfulapidesign.vo.Student;
 import com.thoughtworks.capability.gtb.restfulapidesign.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,7 +55,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student updateStudent(Long id, Student newStudent) {
-
-        return getStudent(id).updateByStudent(newStudent);
+        Utils.copyPropertiesIgnoreNull(newStudent, getStudent(id));
+        return getStudent(id);
     }
 }
