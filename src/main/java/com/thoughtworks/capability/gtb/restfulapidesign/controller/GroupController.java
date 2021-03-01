@@ -6,8 +6,12 @@ import com.thoughtworks.capability.gtb.restfulapidesign.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 
@@ -15,20 +19,23 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/groups")
+@Validated
 public class GroupController {
 
     public final GroupService groupService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public List<Group> createGroups(@RequestBody List<Student> students) {
+    public List<Group> createGroups(@RequestBody
+                                    @NotEmpty(message = "学生列表不能为空")
+                                    @Valid List<Student> students) {
         log.info("create groups by students: {}", students);
         return groupService.createGroups(students);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Group getGroup(@PathVariable int id) {
+    public Group getGroup(@PathVariable @Min(1) int id) {
         log.info("get group by id: {}", id);
         return groupService.getGroup(id);
     }
@@ -40,9 +47,9 @@ public class GroupController {
         return groupService.getGroups();
     }
 
-    @PatchMapping("/{id}")
+    @RequestMapping(path = "/{id}", method = {RequestMethod.PATCH, RequestMethod.PUT})
     @ResponseStatus(HttpStatus.CREATED)
-    public Group updateGroup(@PathVariable int id, @RequestBody Group group) {
+    public Group updateGroup(@PathVariable @Min(1) int id, @RequestBody @Valid Group group) {
         log.info("update group by id: {}", id);
         return groupService.updateGroup(id, group);
     }

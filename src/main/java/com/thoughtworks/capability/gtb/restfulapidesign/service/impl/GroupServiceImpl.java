@@ -4,7 +4,7 @@ import com.thoughtworks.capability.gtb.restfulapidesign.utils.Utils;
 import com.thoughtworks.capability.gtb.restfulapidesign.vo.Group;
 import com.thoughtworks.capability.gtb.restfulapidesign.vo.Student;
 import com.thoughtworks.capability.gtb.restfulapidesign.service.GroupService;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -12,18 +12,16 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-
 @Service
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
 
     @Setter
     private int initialCapacity = 6;
-    private final List<List<Student>> studentGroup = new ArrayList<>();
-    private List<Group> groups;
+    private final List<List<Student>> studentGroup;
+    private final List<Group> groups;
 
     @Override
     public List<Group> createGroups(List<Student> students) {
@@ -37,7 +35,6 @@ public class GroupServiceImpl implements GroupService {
         for (int index = 0; index < students.size(); index++)
             studentGroup.get(index % initialCapacity).add(students.get(index));
 
-        groups = new ArrayList<>(studentGroup.size());
         for (int groupId = 1; groupId <= studentGroup.size(); groupId++) {
             groups.add(new Group(groupId,
                     "team " + groupId,
@@ -54,8 +51,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<Group> getGroups() {
-        if (Objects.isNull(groups) || groups.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "there is no group");
+        if (groups.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "there are no groups");
         }
         return groups;
     }

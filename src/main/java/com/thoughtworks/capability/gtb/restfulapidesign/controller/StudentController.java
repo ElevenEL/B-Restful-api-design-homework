@@ -6,8 +6,12 @@ import com.thoughtworks.capability.gtb.restfulapidesign.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 
@@ -15,21 +19,23 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/students")
+@Validated
 public class StudentController {
 
     public final StudentService studentService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public List<Student> createStudent(@RequestBody List<Student> studentList) {
+    public List<Student> createStudent(@RequestBody
+                                       @NotEmpty(message = "学生列表不能为空")
+                                       @Valid List<Student> studentList) {
         log.info("create students , request: {}", studentList);
         return studentService.createStudents(studentList);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody
-    public void deleteStudent(@PathVariable long id) {
+    public void deleteStudent(@PathVariable @Min(1) long id) {
         log.info("delete student by id: {}", id);
         studentService.deleteStudent(id);
     }
@@ -37,7 +43,7 @@ public class StudentController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Student getStudent(@PathVariable long id) {
+    public Student getStudent(@PathVariable @Min(1) long id) {
         log.info("get student by id: {}", id);
         return studentService.getStudent(id);
     }
@@ -51,7 +57,7 @@ public class StudentController {
 
     @RequestMapping(path = "/{id}", method = {RequestMethod.PATCH, RequestMethod.PUT})
     @ResponseStatus(HttpStatus.CREATED)
-    public Student updateStudent(@PathVariable long id, @RequestBody Student student) {
+    public Student updateStudent(@PathVariable @Min(1) long id, @RequestBody @Valid Student student) {
         log.info("update student by id: {}", id);
         return studentService.updateStudent(id, student);
     }
